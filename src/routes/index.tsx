@@ -1,24 +1,33 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "RainSafeRoute — Flood-Aware Safe Navigation for Monsoons" },
+      {
+        name: "description",
+        content:
+          "Find the safest route during monsoon flooding using rainfall data, historical flood hotspots and community waterlogging reports across Indian cities.",
+      },
+      { property: "og:title", content: "RainSafeRoute — Flood-Aware Safe Navigation" },
+      {
+        property: "og:description",
+        content:
+          "Safety-first navigation for monsoon-prone regions: live rainfall, flood hotspots, community reports and risk-scored routes.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <iframe
+      src="/app/index.html"
+      title="RainSafeRoute"
+      style={{ position: "fixed", inset: 0, width: "100%", height: "100%", border: "none" }}
+    />
   );
 }
