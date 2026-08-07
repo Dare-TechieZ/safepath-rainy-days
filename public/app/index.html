@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RainSafeRoute — Flood-Aware Safe Navigation for Indian Monsoons</title>
+<meta name="description" content="RainSafeRoute finds the safest route during monsoon flooding using rainfall, flood hotspots and community waterlogging reports." />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+
+<!-- ================= TOP NAV ================= -->
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">🌧️</span>
+    <div>
+      <div class="brand-name">RainSafeRoute</div>
+      <div class="brand-sub">Flood-aware navigation</div>
+    </div>
+  </div>
+
+  <button class="hamburger" id="hamburger" aria-label="Toggle navigation">☰</button>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-tab="navigation">Navigation</button>
+    <button class="tab" data-tab="rainfall">Live Rainfall</button>
+    <button class="tab" data-tab="community">Community Reports</button>
+    <button class="tab" data-tab="safety">Safety</button>
+    <button class="tab" data-tab="analytics">Analytics</button>
+    <button class="tab" data-tab="admin">Admin</button>
+  </nav>
+
+  <div class="status-cluster">
+    <span class="badge badge-demo" id="modeBadge">🟢 DEMO MODE</span>
+    <span class="badge badge-rain" id="rainBadge">🌧️ 0.0 mm/hr</span>
+    <span class="badge badge-sim" id="simBadge">⏸ Simulation paused</span>
+    <span class="badge badge-user" id="locBadge">📍 Delhi NCR</span>
+  </div>
+</header>
+
+<main>
+
+<!-- ================= NAVIGATION VIEW ================= -->
+<section class="view active" id="view-navigation">
+  <div class="layout">
+    <!-- LEFT PANEL -->
+    <aside class="panel-col">
+      <div class="card">
+        <h2 class="card-title">Find Your Safest Route</h2>
+        <p class="card-sub">Optimised for flood safety, not just speed.</p>
+
+        <label class="field">
+          <span>Source</span>
+          <input id="srcInput" type="text" placeholder="Enter starting location" autocomplete="off" />
+          <div class="suggestions" id="srcSuggest"></div>
+        </label>
+
+        <label class="field">
+          <span>Destination</span>
+          <input id="dstInput" type="text" placeholder="Enter destination" autocomplete="off" />
+          <div class="suggestions" id="dstSuggest"></div>
+        </label>
+
+        <label class="field">
+          <span>Vehicle</span>
+          <select id="vehicleSelect">
+            <option value="car">🚗 Car</option>
+            <option value="bike">🏍️ Bike</option>
+            <option value="truck">🚚 Truck</option>
+            <option value="ambulance">🚑 Emergency Vehicle</option>
+            <option value="fire">🚒 Fire &amp; Rescue</option>
+            <option value="school">🏫 School Bus</option>
+            <option value="delivery">📦 Delivery</option>
+          </select>
+        </label>
+
+        <button class="btn btn-primary btn-block" id="findBtn">FIND SAFE ROUTES</button>
+        <div class="vehicle-note" id="vehicleNote"></div>
+        <div class="inline-error" id="formError"></div>
+      </div>
+
+      <div class="card" id="advisoryCard" hidden>
+        <h3 class="card-title">⚠️ Travel Advisory</h3>
+        <div id="advisoryBody" class="advisory"></div>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">🌧️ Rainfall <span class="tag tag-warn" id="rainSourceTag">SIMULATED</span></h3>
+        <div class="rain-readout">
+          <div><b id="rainValue">0.0</b><small>mm/hr</small></div>
+          <div class="rain-meta">
+            <div>Intensity: <b id="rainIntensity">No Rain</b></div>
+            <div>Temp: <b id="rainTemp">—</b></div>
+            <div>Updated: <b id="rainUpdated">—</b></div>
+          </div>
+        </div>
+        <div class="rain-bar"><div id="rainBarFill"></div></div>
+        <div class="btn-row">
+          <button class="btn btn-ghost" data-rain="light">Light</button>
+          <button class="btn btn-ghost" data-rain="moderate">Moderate</button>
+          <button class="btn btn-ghost" data-rain="heavy">Heavy</button>
+          <button class="btn btn-ghost" data-rain="extreme">Extreme</button>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-safe" id="simToggle">▶ Simulate Rainfall</button>
+          <button class="btn btn-info" id="fetchLive">Fetch Live Weather</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">🚨 Emergency Helplines <span class="tag tag-info">INDIA</span></h3>
+        <div class="helplines" id="helplines"></div>
+        <p class="fineprint">Availability can vary by region and service. Always use the official emergency service appropriate to your situation.</p>
+      </div>
+    </aside>
+
+    <!-- MAP -->
+    <div class="map-col">
+      <div class="map-wrap">
+        <div id="map"></div>
+        <div class="rain-fx" id="rainFx"></div>
+        <div class="legend">
+          <div class="legend-title">Legend</div>
+          <div>🟢 Safest Route</div>
+          <div>🔴 Fastest / High Risk</div>
+          <div>⚫ Alternative Route</div>
+          <div>⚠️ Historical Flood Hotspot</div>
+          <div>📢 Community Report</div>
+          <div>🏥 Hospital / Medical Aid</div>
+        </div>
+      </div>
+
+      <div class="routes" id="routeCards">
+        <div class="empty-state">Enter a source and destination, then press <b>FIND SAFE ROUTES</b> to compare flood risk across three real road routes.</div>
+      </div>
+
+      <div class="card" id="compareCard" hidden>
+        <h3 class="card-title">Route Comparison</h3>
+        <div class="table-scroll">
+          <table class="table" id="compareTable"></table>
+        </div>
+      </div>
+
+      <div class="card" id="hospitalCard" hidden>
+        <h3 class="card-title">🏥 Nearby Medical Aid <span class="tag tag-warn" id="hospitalTag">DEMO DATA</span></h3>
+        <div id="hospitalList" class="hospital-list"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= RAINFALL VIEW ================= -->
+<section class="view" id="view-rainfall">
+  <div class="card">
+    <h2 class="card-title">Live Rainfall Simulator <span class="tag tag-warn">DEMO SIMULATION</span></h2>
+    <div class="stat-grid">
+      <div class="stat"><span>Rainfall</span><b id="rf2Value">0.0 mm/hr</b></div>
+      <div class="stat"><span>Intensity</span><b id="rf2Intensity">No Rain</b></div>
+      <div class="stat"><span>Condition</span><b id="rf2Condition">Clear</b></div>
+      <div class="stat"><span>Temperature</span><b id="rf2Temp">—</b></div>
+      <div class="stat"><span>Data source</span><b id="rf2Source">Simulated</b></div>
+      <div class="stat"><span>Last updated</span><b id="rf2Updated">—</b></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" data-rain="light">Light Rain</button>
+      <button class="btn btn-ghost" data-rain="moderate">Moderate Rain</button>
+      <button class="btn btn-ghost" data-rain="heavy">Heavy Rain</button>
+      <button class="btn btn-ghost" data-rain="extreme">Extreme Rain</button>
+      <button class="btn btn-safe" id="simToggle2">▶ Auto Simulation</button>
+      <button class="btn btn-danger" id="simPause2">⏸ Pause Simulation</button>
+    </div>
+    <p class="fineprint">Auto simulation steps rainfall gradually (0 → 3 → 7 → 12 → 18 → 25 → 32 mm/hr) every few seconds and recalculates every route risk score. Real deployments poll Open-Meteo roughly every 15 minutes.</p>
+  </div>
+
+  <div class="card">
+    <h3 class="card-title">Rainfall Trend (last 12 readings)</h3>
+    <canvas id="rainTrendChart" height="220"></canvas>
+  </div>
+</section>
+
+<!-- ================= COMMUNITY VIEW ================= -->
+<section class="view" id="view-community">
+  <div class="layout-2">
+    <div class="card">
+      <h2 class="card-title">📢 Report Waterlogging</h2>
+      <label class="field"><span>Location</span>
+        <input id="repLocation" type="text" placeholder="e.g. Minto Bridge underpass" />
+      </label>
+      <label class="field"><span>Severity</span>
+        <select id="repSeverity">
+          <option value="Ankle-level">Ankle-level</option>
+          <option value="Knee-level">Knee-level</option>
+          <option value="Waist-level">Waist-level</option>
+          <option value="Road completely blocked">Road completely blocked</option>
+        </select>
+      </label>
+      <label class="field"><span>Description</span>
+        <textarea id="repDesc" rows="3" placeholder="What are you seeing on the road?"></textarea>
+      </label>
+      <label class="field"><span>Photo (optional)</span>
+        <input id="repPhoto" type="file" accept="image/*" />
+      </label>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="repSubmit">SUBMIT REPORT</button>
+        <button class="btn btn-ghost" id="repCancel">CANCEL</button>
+      </div>
+      <div class="inline-error" id="repError"></div>
+      <p class="fineprint">Reports are stored locally in your browser for this demo and are labelled <b>DEMO COMMUNITY DATA</b>.</p>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title">Live Waterlogging Reports <span class="tag tag-warn">DEMO COMMUNITY DATA</span></h2>
+      <div class="btn-row filters" id="reportFilters">
+        <button class="btn btn-chip active" data-filter="all">All</button>
+        <button class="btn btn-chip" data-filter="recent">Recent</button>
+        <button class="btn btn-chip" data-filter="severe">Severe</button>
+        <button class="btn btn-chip" data-filter="verified">Verified</button>
+      </div>
+      <div id="reportList" class="report-list"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SAFETY VIEW ================= -->
+<section class="view" id="view-safety">
+  <div class="card">
+    <h2 class="card-title">🛡️ Travel Safety Card</h2>
+    <div class="layout-2">
+      <div>
+        <h4>Before travelling</h4>
+        <ul class="safety-list">
+          <li>Check rainfall intensity before you leave.</li>
+          <li>Avoid flooded underpasses entirely.</li>
+          <li>Do not enter roads where the water depth is unknown.</li>
+          <li>Keep your phone charged and carry a power bank.</li>
+          <li>Carry emergency supplies (water, torch, basic first aid).</li>
+          <li>Inform someone about your route and expected arrival.</li>
+        </ul>
+      </div>
+      <div>
+        <h4>During heavy rainfall</h4>
+        <ul class="safety-list">
+          <li>Reduce speed and switch on low-beam headlights.</li>
+          <li>Maintain extra braking distance.</li>
+          <li>Avoid driving through moving water.</li>
+          <li>Do not stop under trees, hoardings or unsafe structures.</li>
+          <li>Follow instructions from local authorities and traffic police.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="danger-banner">⚠️ If water is moving rapidly across the road, DO NOT attempt to cross.</div>
+  </div>
+
+  <div class="card">
+    <h3 class="card-title">🚨 Indian Emergency Helplines</h3>
+    <div class="helplines" id="helplines2"></div>
+    <p class="fineprint">Availability can vary by region/service. Use the appropriate official emergency service for your situation.</p>
+  </div>
+
+  <div class="card">
+    <h3 class="card-title">Historical Flood Hotspots <span class="tag tag-warn">HISTORICAL / DEMO HOTSPOT</span></h3>
+    <div id="hotspotList" class="hotspot-list"></div>
+  </div>
+</section>
+
+<!-- ================= ANALYTICS VIEW ================= -->
+<section class="view" id="view-analytics">
+  <div class="card">
+    <h2 class="card-title">Analytics <span class="tag tag-warn">SIMULATED DEMO DATA</span></h2>
+    <div class="btn-row filters" id="analyticsFilters">
+      <button class="btn btn-chip active" data-range="7">Last 7 days</button>
+      <button class="btn btn-chip" data-range="14">Last 14 days</button>
+      <button class="btn btn-chip" data-range="30">Last 30 days</button>
+    </div>
+    <div class="kpi-grid" id="kpiGrid"></div>
+  </div>
+  <div class="layout-2">
+    <div class="card"><h3 class="card-title">Route Risk Distribution</h3><canvas id="riskChart" height="220"></canvas></div>
+    <div class="card"><h3 class="card-title">Rainfall Trend</h3><canvas id="rainChart" height="220"></canvas></div>
+    <div class="card"><h3 class="card-title">Community Reports Over Time</h3><canvas id="reportChart" height="220"></canvas></div>
+    <div class="card"><h3 class="card-title">Safe vs Risky Routes</h3><canvas id="safeChart" height="220"></canvas></div>
+  </div>
+  <div class="card"><h3 class="card-title">Flood Hotspot Distribution by Severity</h3><canvas id="hotspotChart" height="220"></canvas></div>
+</section>
+
+<!-- ================= ADMIN VIEW ================= -->
+<section class="view" id="view-admin">
+  <div class="card">
+    <h2 class="card-title">System Monitoring <span class="tag tag-warn">DEMO</span></h2>
+    <div class="kpi-grid" id="adminGrid"></div>
+  </div>
+  <div class="card">
+    <h3 class="card-title">Community Reports</h3>
+    <div class="btn-row filters" id="adminFilters">
+      <button class="btn btn-chip active" data-af="all">All</button>
+      <button class="btn btn-chip" data-af="pending">Pending</button>
+      <button class="btn btn-chip" data-af="verified">Verified</button>
+      <button class="btn btn-chip" data-af="rejected">Rejected</button>
+    </div>
+    <div class="table-scroll"><table class="table" id="adminTable"></table></div>
+  </div>
+  <div class="card">
+    <h3 class="card-title">Demo Data</h3>
+    <div class="btn-row">
+      <button class="btn btn-ghost" id="adminStart">▶ Start Simulation</button>
+      <button class="btn btn-ghost" id="adminPause">⏸ Pause Simulation</button>
+      <button class="btn btn-danger" id="resetDemo">RESET DEMO DATA</button>
+    </div>
+    <p class="fineprint">Reset clears locally stored reports, analytics counters, vehicle preference and last searched locations.</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  RainSafeRoute — frontend prototype. Rainfall may use live Open-Meteo data; hotspots, hospitals, community reports and analytics are simulated demo data.
+</footer>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="./script.js"></script>
+</body>
+</html>
