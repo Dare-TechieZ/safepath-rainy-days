@@ -482,7 +482,7 @@ function assignRoles() {
   if (safest.safety >= byTime[0].safety) safest.role = "safest";
   else byTime[0].role = "fastest";
   if (!routes.some((r) => r.role === "safest")) bySafety[0].role = "safest";
-  const recommended = [...routes].sort((a, b) => b.safety - a.safety)[0];
+  const recommended = [...routes].sort((a, b) => b.safety - a.safety || (a.role === "safest" ? -1 : b.role === "safest" ? 1 : 0))[0];
   routes.forEach((r) => (r.recommended = r === recommended));
   if (!selectedRouteId || !routes.some((r) => r.id === selectedRouteId)) selectedRouteId = recommended.id;
 }
