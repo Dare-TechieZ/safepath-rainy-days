@@ -1,1624 +1,546 @@
-# Safe Route Navigator
+#  RainSafeRoute
 
-Build a Complete Working Website: RainSafeRoute
+### Smart Flood-Aware Route Navigation
 
-Build a complete, polished, responsive web application called RainSafeRoute — a flood-aware, safety-first navigation platform for monsoon-prone regions of India.
+**Navigate Smarter. Stay Safer.**
 
-This must be a fully functional frontend prototype, not just a static UI/mockup. Every major button, input, filter, modal, map interaction, route selection, report submission, simulation control, and dashboard interaction must work.
+RainSafeRoute is a flood-aware navigation web application designed to help people make safer travel decisions during heavy rainfall and monsoon conditions.
 
-Use HTML5, CSS3, and vanilla JavaScript. Keep the project simple enough to run by opening index.html, while structuring the code cleanly so it can later be connected to a Node.js/Express/Supabase backend.
+Instead of focusing only on the fastest route, RainSafeRoute considers rainfall intensity, known flood hotspots, and community-reported waterlogging to estimate route risk and highlight a safer alternative.
 
-1. CORE PRODUCT IDEA
+🌐 **Live Demo:** https://safepath-rainy-days.vercel.app/
 
-RainSafeRoute is different from Google Maps, Apple Maps, and MapMyIndia.
+---
 
-Normal navigation apps optimize primarily for:
 
-Fastest route / shortest route
 
-RainSafeRoute optimizes for:
+## 🧭 About the Project
 
-Safest route during rainfall and flooding
+RainSafeRoute is a web-based flood-aware navigation system built for monsoon travel.
 
-The application should simulate a realistic monsoon navigation experience using:
+The application allows users to:
 
-Real-world interactive map
+- Enter a source and destination
+- Select their vehicle type
+- Generate real road routes
+- Compare route distance and estimated travel time
+- Calculate flood-risk scores
+- Identify nearby flood hotspots
+- View live rainfall conditions
+- See rainfall intensity on a map
+- View community waterlogging reports
+- Find nearby medical assistance
+- Access Indian emergency helplines
+- Follow monsoon travel safety precautions
 
-Real roads
+The goal is simple:
 
-Realistic route paths
+> **Don't just find the fastest route. Find a route that is safer during rain and flooding.**
 
-Simulated live rainfall
+---
 
-Historical flood hotspots
+## ⚠️ The Problem
 
-Simulated community waterlogging reports
+During heavy monsoon rainfall, a route that looks optimal under normal navigation conditions may become unsafe because of:
 
-Hospitals and medical aid
+- Waterlogging
+- Flood-prone underpasses
+- Heavy rainfall
+- Poor drainage
+- Road blockages
+- Rapidly changing local conditions
 
-Indian emergency helpline information
+Traditional navigation systems primarily optimize for distance and travel time.
 
-Multiple vehicle modes
+RainSafeRoute adds a safety perspective by considering rainfall, flood hotspots and community reports while evaluating available routes.
 
-Flood-risk calculations
+---
 
-Route comparison
+## 🚀 How RainSafeRoute Works
 
-Safety recommendations
+### Step 1 — Enter Your Journey
 
-Analytics
+Users enter:
 
-Admin monitoring
+- Source
+- Destination
+- Vehicle type
 
-Clearly label simulated/demo information wherever real backend data is not available.
+Supported vehicle modes include:
 
-2. TECHNOLOGY REQUIREMENTS
+- 🚗 Car
+- 🏍️ Bike
+- 🚚 Truck
+- 🚑 Emergency Vehicle
+- 🚒 Fire & Rescue
+- 🏫 School Bus
+- 📦 Delivery
 
-Use:
+### Step 2 — Generate Real Road Routes
 
-Frontend
+RainSafeRoute uses real road network data to generate alternative routes between the selected locations.
 
-HTML5
+The application uses **OSRM** for road routing and **Nominatim** for location search and geocoding.
 
-CSS3
+### Step 3 — Evaluate Flood Risk
 
-Vanilla JavaScript
+Each route is evaluated using multiple factors:
 
-Map
+- Current rainfall
+- Distance from known flood hotspots
+- Nearby community waterlogging reports
+- Vehicle-specific safety requirements
 
-Use Leaflet.js with OpenStreetMap tiles.
+### Step 4 — Compare Routes
 
-The map must be a REAL interactive map, not a fake/static map.
+Routes are categorized as:
 
-Include:
+🟢 **Safest Route**
 
-Zoom controls
+🔴 **Fastest / Higher Risk Route**
 
-Pan
+⚫ **Alternative Route**
 
-Markers
+The interface displays route distance, ETA, flood risk and safety score.
 
-Popups
+### Step 5 — Make a Safer Decision
 
-Route polylines
+The user can compare the available routes and choose the option that best balances travel time and safety.
 
-Different route colors
+---
 
-Map legend
+## 🧠 Route Risk Analysis
 
-Current location simulation
+RainSafeRoute calculates a flood-risk score for each route.
 
-Hotspot markers
+The risk engine considers:
 
-Community report markers
+### 🌧️ Rainfall Factor
 
-Hospital markers
+Higher rainfall intensity increases the potential flood risk.
 
-Do NOT create a fake map using CSS.
+### ⚠️ Flood Hotspot Proximity
 
-Use Leaflet CDN.
+Routes passing close to known flood-prone locations receive a higher risk score.
 
-3. MAIN APPLICATION LAYOUT
+### 📢 Community Reports
 
-Create a professional modern dashboard/navigation interface.
+Recent community waterlogging reports near a route contribute to its risk assessment.
 
-Layout:
+### 🚗 Vehicle Profile
 
-Top navigation bar
-
-Logo:
-
-🌧️ RainSafeRoute
-
-Navigation:
-
-Navigation
-
-Live Rainfall
-
-Community Reports
-
-Safety
-
-Analytics
-
-Admin
-
-Right side:
-
-🌧️ Rain status
-
-Simulation indicator
-
-User/location indicator
-
-4. HERO / NAVIGATION PANEL
-
-The primary screen should contain:
-
-"Find Your Safest Route"
-
-Inputs:
-
-Source
-
-Placeholder:
-
-Enter starting location
-
-Destination
-
-Placeholder:
-
-Enter destination
-
-Vehicle
-
-Dropdown:
-
-🚗 Car
-
-🏍️ Bike
-
-🚚 Truck
-
-🚑 Emergency Vehicle
-
-🚒 Fire & Rescue
-
-🏫 School Bus
-
-📦 Delivery
-
-Button:
-
-FIND SAFE ROUTES
-
-When clicked:
-
-Validate source and destination.
-
-Geocode the locations.
-
-Display them on the real map.
-
-Generate 3 realistic route alternatives.
-
-Calculate route distance.
-
-Calculate ETA.
-
-Calculate flood-risk score.
-
-Calculate safety score.
-
-Find nearest hotspot.
-
-Display rainfall conditions.
-
-Recommend the safest route.
-
-Display all 3 routes on the map.
-
-Do not make the button decorative.
-
-5. ROUTES
-
-Display exactly 3 primary route alternatives:
-
-ROUTE 1 — FASTEST
-
-Color:
-
-🔴 RED
-
-Show:
-
-Fastest
-
-Distance
-
-ETA
-
-Flood Risk Score
-
-Safety Score
-
-Nearest hotspot
-
-Rainfall
-
-Recommendation
-
-Example:
-
-🔴 Fastest Route
-8.4 km
-22 min
-Flood Risk: 72/100
-Safety Score: 28/100
-Nearest hotspot: 180 m
-
-ROUTE 2 — SAFEST
-
-Color:
-
-🟢 GREEN
-
-Show:
-
-Safest Route
-
-Distance
-
-ETA
-
-Flood Risk Score
-
-Safety Score
-
-Nearest hotspot
-
-Rainfall
-
-Recommendation
-
-Example:
-
-🟢 Safest Route
-9.8 km
-28 min
-Flood Risk: 18/100
-Safety Score: 82/100
-Nearest hotspot: 780 m
-
-This should be automatically selected/recommended when it has the best safety score.
-
-Display:
-
-⭐ RECOMMENDED SAFEST ROUTE
-
-ROUTE 3 — ALTERNATIVE
-
-Color:
-
-⚫ BLACK
-
-Show:
-
-Alternative Route
-
-Distance
-
-ETA
-
-Flood Risk Score
-
-Safety Score
-
-Nearest hotspot
-
-Rainfall
-
-Example:
-
-⚫ Alternative Route
-10.2 km
-31 min
-Flood Risk: 43/100
-Safety Score: 57/100
-
-6. REAL ROUTING
-
-Do not simply draw random straight lines.
-
-Use a real routing service such as:
-
-OpenRouteService
-
-or another publicly accessible routing API.
-
-If an API key is required, structure the JavaScript so the key can easily be inserted through:
-
-const ORS_API_KEY = "YOUR_API_KEY";
-
-
-If no routing API key is available, implement a realistic demo fallback using predefined road-coordinate datasets for Delhi/Indian locations.
-
-The website must still work without an API key.
-
-The fallback must not draw straight lines between source and destination.
-
-Use realistic road-like route coordinates.
-
-7. SOURCE / DESTINATION GEOCODING
-
-Use:
-
-Nominatim / OpenStreetMap
-
-for geocoding.
-
-Example:
-
-User enters:
-
-India Gate
-
-and
-
-IGDTUW
-
-The application should find their coordinates and move the map to the selected area.
-
-Add autocomplete/search suggestions if possible.
-
-If API requests fail, provide a graceful fallback using predefined locations such as:
-
-India Gate
-
-Connaught Place
-
-IGDTUW
-
-Kashmere Gate
-
-Anand Vihar
-
-Lajpat Nagar
-
-Saket
-
-Rohini
-
-Dwarka
-
-Noida
-
-Gurugram
-
-8. REAL INTERACTIVE MAP
-
-The map is the central part of the application.
-
-Use Leaflet.
-
-Map must display:
-
-Source marker
-
-🟢
-
-Destination marker
-
-🔴
-
-Route 1
-
-Red polyline
-
-Route 2
-
-Green polyline
-
-Route 3
-
-Black polyline
-
-Historical flood hotspots
-
-⚠️ Water/flood icon
-
-Community reports
-
-📢 Marker
-
-Hospitals
-
-🏥 Marker
-
-9. MAP LEGEND
-
-Add a floating legend:
-
-🟢 Safest Route
-🔴 Fastest / High Risk
-⚫ Alternative Route
-⚠️ Historical Flood Hotspot
-📢 Community Report
-🏥 Hospital / Medical Aid
-
-10. SIMULATED LIVE RAINFALL
-
-Create a realistic rainfall simulation.
-
-The UI should contain a:
-
-LIVE RAINFALL SIMULATOR
-
-Display:
-
-Rainfall: 18.4 mm/hr
-
-Intensity: Heavy Rain
-
-Last Updated: 2 min ago
-
-Include a button:
-
-▶ Simulate Rainfall
-
-And controls:
-
-Light Rain
-
-Moderate Rain
-
-Heavy Rain
-
-Extreme Rain
-
-Also include:
-
-Auto Simulation
-
-When simulation is running, rainfall should gradually change every few seconds.
+Different vehicles receive different safety priorities.
 
 For example:
 
-0 → 3 → 7 → 12 → 18 → 25 → 32 mm/hr
+- Bikes are given stricter waterlogging avoidance.
+- School buses use stricter safety thresholds.
+- Emergency vehicles prioritize speed while still avoiding extreme-risk roads.
+- Delivery vehicles balance ETA and safety.
 
-The route risk scores must automatically update when rainfall changes.
+The final result produces:
 
-Add an animated rainfall indicator / rain particles or visual effect.
+- Flood Risk %
+- Safety Score / 100
+- Nearest Flood Hotspot
+- Number of nearby reports
+- Route classification
 
-Clearly label:
+---
 
-DEMO SIMULATION
+# ✨ Key Features
 
-when using simulated rainfall.
+## 1. 🗺️ Flood-Aware Navigation
 
-11. OPEN-METEO INTEGRATION
+- Source and destination search
+- Real road routing
+- Multiple route alternatives
+- Route comparison
+- Distance and ETA
+- Safest route identification
+- Fastest route identification
+- Flood-risk scoring
 
-Structure the code to support the real Open-Meteo API.
+---
 
-Fetch rainfall using the selected source coordinates.
+## 2. 🌧️ Live Rainfall
 
-Poll/update approximately every 15 minutes in real deployment.
+The application retrieves current rainfall and temperature information using the Open-Meteo API.
 
-For this frontend demo, provide a simulation fallback so the website works even when the API is unavailable.
+Users can view:
 
-Display:
+- Current rainfall
+- Rainfall intensity
+- Temperature
+- Weather condition
+- Last updated time
+- Rainfall trend
 
-Rainfall mm/hr
+A rainfall heatmap can also be displayed on the map.
 
-Temperature
+---
 
-Weather condition
+## 3. 📍 Flood Hotspots
 
-Rain intensity
+The map displays known flood-prone locations using severity levels such as:
 
-Last updated
+- Moderate
+- High
+- Extreme
 
-12. FLOOD RISK SCORE
+Examples include:
 
-Implement this exact formula:
+- Minto Bridge Underpass
+- ITO Crossing
+- Pul Prahladpur Underpass
+- Zakhira Underpass
+- Moolchand Underpass
+- Okhla Underpass
 
-Flood Risk Score =
-(w1 × Rainfall Factor)
-+
-(w2 × Proximity Factor)
-+
-(w3 × Community Factor)
+---
 
+## 4. 📢 Community Waterlogging Reports
 
-Weights:
+Users can report waterlogging incidents by providing:
 
-w1 = 0.40
-w2 = 0.35
-w3 = 0.25
+- Location
+- Waterlogging severity
+- Description
+- Optional photo
+- Optional video
 
+Reports can be filtered by:
 
-13. RAINFALL FACTOR
+- All
+- Recent
+- Severe
+- Verified
+- My Reports
 
-Calculate Rainfall Factor from 0–100.
+Reports also have a simple verification/progress workflow.
 
-Use:
+---
 
-0 mm/hr → 0
+## 5. 🗣️ Community Forum
 
-0–5 mm/hr → linear 0–20
+The built-in community forum allows users to:
 
-5–15 mm/hr → linear 20–50
+- Start discussions
+- Mention a locality
+- Share current road conditions
+- Search discussions
+- Sort discussions by popularity or newest posts
 
-15–30 mm/hr → linear 50–80
+This helps users share local information that may change faster than traditional datasets.
 
-30+ mm/hr → 100
+---
 
+## 6. 🛡️ Travel Safety
 
-Implement this using JavaScript interpolation.
+The Safety section provides practical monsoon travel precautions, including:
 
-Do NOT hardcode the final risk score.
+- Checking rainfall intensity before travelling
+- Avoiding flooded underpasses
+- Avoiding roads with unknown water depth
+- Keeping phones charged
+- Carrying emergency supplies
+- Maintaining safe braking distance
+- Avoiding moving water
+- Following traffic and local authority instructions
 
-14. PROXIMITY FACTOR
+---
 
-Calculate distance from the route to the nearest historical flood hotspot.
+## 7. 🚨 Emergency Support
 
-Use:
+RainSafeRoute provides Indian emergency helpline information, including:
 
-0–100m → 100
-100–300m → 75
-300–500m → 50
-500m–1km → 25
->1km → 0
+- 112 — Unified Emergency
+- 108 — Ambulance
+- 101 — Fire
+- 100 — Police
+- 1098 — Child Helpline
+- 181 — Women Helpline
 
+The application also displays nearby medical assistance on the map.
 
-Display:
+> Emergency information should always be verified with the appropriate official service for the user's location.
 
-Nearest hotspot: 240 m
+---
 
-and:
+## 8. 📊 Analytics Dashboard
 
-Proximity Risk: 75/100
+The Analytics section provides visual insights including:
 
-For demo mode, create realistic historical hotspot coordinates around Delhi/Indian cities.
+- Total routes analysed
+- Safe routes
+- High-risk routes
+- Active waterlogging reports
+- Flood hotspots tracked
+- Average rainfall
+- Route risk distribution
+- Rainfall trends
+- Community reports over time
+- Safe vs risky routes
+- Flood hotspot severity distribution
 
-Clearly label them as:
+Users can view analytics for:
 
-Historical / Demo Flood Hotspot
+- Last 7 days
+- Last 14 days
+- Last 30 days
 
-15. COMMUNITY FACTOR
+---
 
-Implement:
+## 9. 🔐 User & Admin Modes
 
-No reports within 500m during last 2 hours → 0
+RainSafeRoute includes:
 
-1 unverified report → 40
+- User login
+- Admin login
+- CAPTCHA security check
+- Session-based interface
+- Admin monitoring dashboard
+- Community report moderation interface
 
-2+ reports OR 1 verified report → 80
-
-3+ verified reports → 100
-
-
-Use simulated community reports initially.
-
-Every report must contain:
-
-Location
-
-Timestamp
-
-Severity
-
-Verification status
-
-Optional image indicator
-
-Description
-
-Example:
-
-Waterlogging reported
-14 min ago
-Knee-level
-Verified
-
-16. RISK CLASSIFICATION
-
-Based on Flood Risk Score:
-
-0–25 → LOW
-26–50 → MODERATE
-51–75 → HIGH
-76–100 → EXTREME
-
-
-Use clear visual indicators.
-
-Example:
-
-🟢 LOW RISK
-
-🟡 MODERATE RISK
-
-🟠 HIGH RISK
-
-🔴 EXTREME RISK
-
-17. SAFETY SCORE
-
-Calculate:
-
-Safety Score = 100 - Flood Risk Score
-
-
-Display both.
-
-Example:
-
-Flood Risk: 22/100
-Safety Score: 78/100
-
-
-18. ROUTE RECOMMENDATION
-
-Automatically recommend the route with the highest safety score.
-
-Show:
-
-⭐ RECOMMENDED
-
-Example:
-
-Green Route is recommended because it has 67% lower flood risk than the fastest route.
-
-The recommendation must dynamically change when rainfall/community reports change.
-
-19. VEHICLE MODES
-
-Implement different route behavior based on vehicle type.
-
-Car
-
-Normal routing.
-
-Bike
-
-Avoid:
-
-High-risk roads
-
-Severe waterlogging
-
-Truck
-
-Avoid:
-
-Narrow roads
-
-Severe flood areas
-
-Low-clearance roads
-
-Emergency Vehicle
-
-Prioritize:
-
-Safety
-
-Reliability
-
-Emergency accessibility
-
-Display:
-
-🚑 Emergency Priority Mode Active
-
-Fire & Rescue
-
-Avoid:
-
-Flooded roads
-
-Low-clearance routes
-
-School Bus
-
-Use strict safety thresholds.
-
-Display:
-
-🏫 School Safety Mode
-
-Delivery
-
-Balance:
-
-Safety
-
-ETA
-
-Route efficiency
-
-20. SAFETY PRECAUTION CARD
-
-After route calculation, show a prominent:
-
-🛡️ TRAVEL SAFETY CARD
-
-Include:
-
-Before travelling
-
-Check rainfall intensity.
-
-Avoid flooded underpasses.
-
-Do not enter roads where water depth is unknown.
-
-Keep phone charged.
-
-Carry emergency supplies.
-
-Inform someone about your route.
-
-During heavy rainfall
-
-Reduce speed.
-
-Maintain extra braking distance.
-
-Avoid driving through moving water.
-
-Do not stop under trees or unsafe structures.
-
-Follow local authorities.
-
-Emergency warning
-
-⚠️ If water is moving rapidly across the road, DO NOT attempt to cross.
-
-21. INDIAN EMERGENCY HELPLINES
-
-Create a clearly visible emergency section.
-
-Include commonly used India emergency numbers:
-
-112 — Unified Emergency Number
-108 — Ambulance
-101 — Fire
-100 — Police
-1098 — Child Helpline
-181 — Women Helpline
-
-
-Make phone numbers clickable using:
-
-<a href="tel:112">112</a>
-
-
-Clearly indicate that availability can vary by region/service and users should use the appropriate official emergency service.
-
-22. NEAREST HOSPITALS / MEDICAL AID
-
-When source and destination are selected:
-
-Find and display nearby hospitals/medical facilities.
-
-Use OpenStreetMap/Overpass where practical.
-
-If unavailable, use realistic demo hospital data.
-
-Display:
-
-🏥 Hospital Name
-📍 Distance
-🚑 Emergency availability
-📞 Call button
-🗺️ View on map
-
-Example:
-
-Nearby Medical Aid
-Hospital A — 1.2 km
-Hospital B — 2.4 km
-
-Clicking a hospital should:
-
-Show its marker.
-
-Open its popup.
-
-Show distance.
-
-Allow "Navigate" / map focus.
-
-Do not invent real hospital phone numbers.
-
-If using demo hospital data, clearly label:
-
-DEMO DATA
-
-23. COMMUNITY WATERLOGGING REPORTING
-
-Create:
-
-📢 REPORT WATERLOGGING
-
-Form:
-
-Location
-Severity:
-
-Ankle-level
-
-Knee-level
-
-Waist-level
-
-Road completely blocked
-
-Description
-
-Photo upload
-
-Button:
-
-SUBMIT REPORT
-
-When submitted:
-
-Validate form.
-
-Add report to the map.
-
-Add report to the community list.
-
-Generate timestamp.
-
-Update Community Factor.
-
-Recalculate route risk.
-
-Show success notification.
-
-Example:
-
-✅ Report submitted successfully.
-
-The user must be able to delete their own demo report.
-
-24. LIVE COMMUNITY REPORT PANEL
-
-Display:
-
-LIVE WATERLOGGING REPORTS
-
-Each report:
-
-📍 Location
-⏱️ Time
-🌊 Severity
-✅ Verified / Unverified
-
-Allow filters:
-
-All
-
-Recent
-
-Severe
-
-Verified
-
-Clicking a report should center the map on its location.
-
-25. HISTORICAL FLOOD HOTSPOTS
-
-Create a dataset of demo historical flood hotspots.
-
-Each hotspot should contain:
-
-{
-  name: "...",
-  lat: ...,
-  lng: ...,
-  severity: "...",
-  source: "Historical/Demo"
-}
-
-
-Show them on the map.
-
-Clicking a hotspot should show:
-
-Name
-
-Historical risk
-
-Distance from route
-
-Severity
-
-Data source
-
-26. SAFETY RECOMMENDATION PANEL
-
-After route generation display:
-
-⚠️ TRAVEL ADVISORY
-
-Example:
-
-Heavy rainfall is currently simulated in this area.
-
-The fastest route passes within 180m of a historical flood hotspot.
-
-Consider the green route. It adds 6 minutes but reduces estimated flood risk by 64%.
-
-Make this dynamically generated from actual calculated values.
-
-27. ANALYTICS DASHBOARD
-
-Create a separate Analytics section.
-
-Show cards:
-
-Total Routes Analysed
-
-Example:
-
-1,248
-
-Safe Routes
-
-824
-
-High Risk Routes
-
-287
-
-Active Waterlogging Reports
-
-34
-
-Flood Hotspots
-
-57
-
-Average Rainfall
-
-14.8 mm/hr
-
-Use JavaScript charts or simple CSS/Canvas charts.
-
-Include:
-
-Route risk distribution
-
-Rainfall trend
-
-Community reports over time
-
-Flood hotspot distribution
-
-Safe vs risky routes
-
-Use realistic demo data.
-
-28. ADMIN DASHBOARD
-
-Create an Admin section.
-
-Show:
-
-System Monitoring
-
-Active users
-
-Routes calculated
-
-Reports received
-
-Verified reports
-
-High-risk areas
-
-Current rainfall
-
-API status
-
-Community Reports Table
-
-Columns:
-
-Location
-Time
-Severity
-Status
-Action
-
-
-Actions:
-
-Verify
-
-Reject
-
-View on map
-
-These buttons must actually work.
-
-When "Verify" is clicked:
-
-Change report status to Verified.
-
-Update Community Factor.
-
-Update risk score.
-
-Update analytics.
-
-29. DATA SIMULATION
-
-Create a JavaScript demo-data layer.
-
-The application should simulate:
-
-Rainfall
-
-Changes dynamically.
-
-Community reports
-
-New reports can appear.
-
-Route requests
-
-Analytics counters change.
-
-Risk scores
-
-Recalculate automatically.
-
-Hotspots
-
-Remain visible on map.
-
-Use:
-
-setInterval()
-
-
-where appropriate.
-
-But do not make the simulation annoying or overly fast.
-
-Provide:
-
-Start Simulation
-
-Pause Simulation
-
-controls.
-
-30. LOCAL STORAGE
-
-Use localStorage so the demo persists:
-
-User reports
-
-Selected vehicle
-
-Last source
-
-Last destination
-
-Simulation state
-
-Analytics counters
-
-When the page is refreshed, previously submitted demo reports should remain.
-
-Provide:
-
-Reset Demo Data
-
-button.
-
-Ask for confirmation before clearing data.
-
-31. RESPONSIVE DESIGN
-
-The website must work on:
-
-Desktop
-
-Laptop
-
-Tablet
-
-Mobile
-
-On mobile:
-
-Map should remain usable.
-
-Route cards should stack vertically.
-
-Navigation should collapse.
-
-Safety card should remain readable.
-
-Emergency numbers should be easy to tap.
-
-32. UI DESIGN
-
-Use a modern emergency/safety technology aesthetic.
-
-Suggested visual style:
-
-Dark navy / charcoal background
-
-White cards
-
-Green = safe
-
-Red = dangerous
-
-Yellow/orange = warning
-
-Blue = information
-
-Use:
-
-Rounded cards
-
-Soft shadows
-
-Clean typography
-
-Glass-like panels where appropriate
-
-Smooth transitions
-
-Hover effects
-
-Status badges
-
-Icons
-
-Do NOT overuse animations.
-
-The map should remain the visual centerpiece.
-
-33. IMPORTANT INTERACTIONS
-
-EVERY BUTTON MUST WORK.
-
-Implement functionality for:
-
-Find Safe Routes
-
-Source search
-
-Destination search
-
-Vehicle selection
-
-Route selection
-
-Show safest route
-
-Show fastest route
-
-Show alternative route
-
-Simulate rainfall
-
-Pause simulation
-
-Light rain
-
-Moderate rain
-
-Heavy rain
-
-Extreme rain
-
-Auto simulation
-
-Report waterlogging
-
-Submit report
-
-Cancel report
-
-View report
-
-Verify report
-
-Reject report
-
-View hospital
-
-Call emergency number
-
-Analytics filters
-
-Admin filters
-
-Reset demo data
-
-Navigation tabs
-
-Map controls
-
-Hospital markers
-
-Hotspot markers
-
-Community markers
-
-No dead buttons.
-
-34. ERROR HANDLING
-
-Handle:
-
-Empty source
-
-Empty destination
-
-Same source and destination
-
-Invalid location
-
-Geocoding failure
-
-Routing API failure
-
-Weather API failure
-
-Network failure
-
-Missing API key
-
-Invalid report
-
-Missing report location
-
-Show friendly messages.
-
-Example:
-
-⚠️ We couldn't find that location. Try a nearby landmark or city.
-
-Never leave the UI blank after an error.
-
-35. DEMO MODE
-
-Because this is a frontend-only project, implement:
-
-🟢 DEMO MODE
-
-at the top.
-
-Demo mode should automatically provide:
-
-Simulated rainfall
-
-Demo hotspots
-
-Demo community reports
-
-Demo hospital data
-
-Fallback routes
-
-Analytics data
-
-The user should be able to demonstrate the entire application without configuring a backend.
-
-Clearly distinguish:
-
-LIVE API DATA
-
-from
-
-SIMULATED DEMO DATA
-
-36. REALISTIC DEMO SCENARIO
-
-On first load, provide a demo scenario around Delhi.
-
-Example:
-
-Source:
-
-IGDTUW
-
-Destination:
-
-India Gate
-
-Vehicle:
-
-Car
-
-When user clicks:
-
-FIND SAFE ROUTES
-
-automatically show:
-
-🔴 Fastest Route
-
-High flood risk
-
-🟢 Safest Route
-
-Slightly longer but much safer
-
-⚫ Alternative Route
-
-Medium risk
-
-Show all three on the real Leaflet map.
-
-Add realistic demo hotspots around the route.
-
-Add community waterlogging reports.
-
-Show rainfall such as:
-
-18.6 mm/hr — Heavy Rain
-
-Then calculate the risk scores using the specified formula.
-
-37. ROUTE CARD DESIGN
-
-Each route card should visually contain:
-
-ROUTE 01
-
-🔴 FASTEST
-
-8.4 km
-22 min
-
-Flood Risk
-72 / 100
-
-Safety Score
-28 / 100
-
-Nearest Hotspot
-180 m
-
-Rainfall
-18.6 mm/hr
-
-[VIEW ROUTE]
-
-
-For safest:
-
-⭐ RECOMMENDED
-
-🟢 SAFEST
-
-9.8 km
-28 min
-
-Flood Risk
-18 / 100
-
-Safety Score
-82 / 100
-
-Nearest Hotspot
-780 m
-
-[SELECT ROUTE]
-
-
-38. ROUTE COMPARISON
-
-Add a comparison table:
-
-RouteDistanceETAFlood RiskSafety🔴 Fastest8.4 km22 min7228🟢 Safest9.8 km28 min1882⚫ Alternative10.2 km31 min4357
-
-The values must come from JavaScript calculations.
-
-Do not hardcode the displayed values.
-
-39. RISK CALCULATION ENGINE
-
-Put all risk calculations into reusable JavaScript functions:
-
-calculateRainfallFactor(rainfall)
-
-calculateProximityFactor(distance)
-
-calculateCommunityFactor(reports)
-
-calculateFloodRisk(
-    rainfallFactor,
-    proximityFactor,
-    communityFactor
-)
-
-calculateSafetyScore(floodRisk)
-
-classifyRisk(score)
-
-
-This makes the system easy to connect to a real backend later.
-
-40. ARCHITECTURE
-
-Create exactly these files:
-
-rainsaferoute/
-│
-├── index.html
-├── style.css
-└── script.js
-
-
-Do not require React, Node.js, npm, or a build system for the initial version.
-
-The website should run by opening:
-
-index.html
-
-
-41. CODE QUALITY
-
-Write complete production-style code.
-
-Do NOT give pseudocode.
-
-Do NOT write:
-
-// implement later
-
-
-Do NOT leave:
-
-TODO
-
-
-Do NOT create empty functions.
-
-Do NOT create fake buttons that do nothing.
-
-Every feature described above must have an implementation.
-
-Use comments to clearly separate:
-
-// MAP
-// GEOCODING
-// ROUTING
-// WEATHER
-// RAINFALL SIMULATION
-// FLOOD RISK ENGINE
-// COMMUNITY REPORTS
-// HOSPITALS
-// ANALYTICS
-// ADMIN
-// LOCAL STORAGE
-
-
-42. EXTERNAL LIBRARIES
-
-Use CDN versions where necessary.
-
-At minimum:
-
-Leaflet.js
-
-Leaflet CSS
-
-Optionally use:
-
-Font Awesome or Lucide icons
-
-Chart.js for analytics
-
-Do not require a package manager.
-
-43. FINAL REQUIREMENT
-
-The final result must feel like a real product demo for a hackathon/project presentation.
-
-It should demonstrate this complete flow:
-
-User enters source
-        ↓
-User enters destination
-        ↓
-Selects vehicle
-        ↓
-Clicks FIND SAFE ROUTES
-        ↓
-Real map updates
-        ↓
-3 routes appear
-        ↓
-Rainfall is displayed
-        ↓
-Flood hotspots appear
-        ↓
-Community reports appear
-        ↓
-Risk scores calculated
-        ↓
-Safest route recommended
-        ↓
-Safety precautions shown
-        ↓
-Nearest hospitals shown
-        ↓
-Emergency numbers shown
-        ↓
-User can report waterlogging
-        ↓
-Risk recalculates
-        ↓
-Analytics update
-        ↓
-Admin dashboard updates
-
-
-The final website should be visually impressive but, more importantly, actually interactive and functional.
-
-44. IMPORTANT ACCURACY RULE
-
-Do not claim that simulated data is live real-world data.
-
-Use clear labels:
-
-SIMULATED RAINFALL
-
-DEMO COMMUNITY DATA
-
-HISTORICAL / DEMO HOTSPOT
-
-When real APIs are used, display:
-
-LIVE WEATHER DATA
-
-The application must gracefully fall back to demo data if an API is unavailable.
-
-45. OUTPUT FORMAT
-
-Provide the complete contents of:
-
-index.html
-
-style.css
-
-script.js
-
-Do not omit any code.
-
-Do not shorten the code with statements such as:
-
-"rest of the code remains the same"
-
-Provide the entire working implementation.
-
-At the end, provide simple instructions for:
-
-Running locally by opening index.html.
-
-Adding an OpenRouteService API key if required.
-
-Deploying the project to Vercel by uploading the three files.
-
-Explaining which features use real APIs and which use simulated demo data.
-
-This project was built with [Lovable](https://lovable.dev).
-
-**Live app**: https://safepath-rainy-days.lovable.app
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/4c680e9b-82bd-442f-a0c5-6f3ac204055a).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+The admin interface allows monitoring of:
+
+- Active users
+- Routes calculated
+- Reports received
+- Verified reports
+- Forum discussions
+- High-risk areas
+- Current rainfall
+
+---
+
+## 10. 🌐 Hindi & English
+
+The interface supports:
+
+🇬🇧 English
+
+🇮🇳 Hindi
+
+Users can switch the application language from the navigation bar.
+
+---
+
+## 11. 🌙 Dark & Light Experience
+
+The application supports theme switching for a more comfortable user experience.
+
+---
+
+## 12. ❓ Built-in FAQ
+
+The application includes a Frequently Asked Questions section containing the project's FAQ document.
+
+Users can read the FAQ directly inside the application or open it in a new browser tab.
+
+---
+
+# 🛠️ Technology Stack
+
+| Category | Technology |
+|---|---|
+| Frontend | HTML5, CSS3, JavaScript |
+| Maps | Leaflet.js |
+| Map Data | OpenStreetMap |
+| Routing | OSRM |
+| Geocoding | Nominatim |
+| Weather | Open-Meteo |
+| Map Heatmap | Leaflet.heat |
+| Storage | Browser LocalStorage |
+| Deployment | Vercel |
+
+---
+
+# 🧩 Application Architecture
+
+```text
+                    ┌─────────────────────────┐
+                    │      RainSafeRoute       │
+                    │      Web Application     │
+                    └────────────┬────────────┘
+                                 │
+                 ┌───────────────┼────────────────┐
+                 │               │                │
+                 ▼               ▼                ▼
+          ┌─────────────┐ ┌─────────────┐ ┌──────────────┐
+          │   Leaflet   │ │    Route    │ │   Weather    │
+          │     Map     │ │    Engine   │ │     Data     │
+          └──────┬──────┘ └──────┬──────┘ └──────┬───────┘
+                 │               │                │
+                 ▼               ▼                ▼
+          OpenStreetMap        OSRM          Open-Meteo
+                 │
+                 ▼
+             Nominatim
+             Geocoding
+
+                         │
+                         ▼
+                ┌──────────────────┐
+                │  Flood Risk      │
+                │  Engine          │
+                │                  │
+                │ Rainfall         │
+                │ Hotspots         │
+                │ Community Reports│
+                │ Vehicle Profile  │
+                └────────┬─────────┘
+                         │
+                         ▼
+               ┌────────────────────┐
+               │ Route Risk & Safety│
+               │      Scores        │
+               └────────────────────┘
+
+```
+# 📊 Data Flow
+```
+User enters Source + Destination
+              │
+              ▼
+        Nominatim Search
+              │
+              ▼
+       Coordinates obtained
+              │
+              ▼
+        OSRM Route Engine
+              │
+              ▼
+      Multiple road routes
+              │
+              ▼
+ ┌──────────────────────────────┐
+ │ Flood Risk Evaluation        │
+ │                              │
+ │ • Rainfall                   │
+ │ • Flood hotspot proximity    │
+ │ • Community reports          │
+ │ • Vehicle profile            │
+ └──────────────┬───────────────┘
+                │
+                ▼
+        Risk + Safety Scores
+                │
+                ▼
+      Route Comparison UI
+                │
+                ▼
+       Safest Route Suggested
+```
+## ⚙️ Getting Started
+
+### Prerequisites
+
+You need:
+
+- Node.js
+- npm
+- A modern web browser
+- Internet connection
+
+### Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/Dare-TechieZ/safepath-rainy-days.git
+```
+
+Move into the project directory:
+
+```bash
+cd safepath-rainy-days
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
 npm run dev
 ```
+
+---
+
+## 🌐 External Services
+
+RainSafeRoute uses publicly accessible services for its core functionality:
+
+### OpenStreetMap
+
+Provides map tiles and geographic map data.
+
+### Nominatim
+
+Used for location search and geocoding.
+
+### OSRM
+
+Used to calculate routes over real road networks.
+
+### Open-Meteo
+
+Provides current rainfall, temperature, and precipitation information.
+
+> These services may have usage limits or availability restrictions.
+
+---
+
+## 💾 Data & Privacy
+
+The current prototype stores application state and session information in the browser using `localStorage`.
+
+This means that community reports, forum activity, and some analytics data are currently associated with the local browser rather than being stored in a centralized production database.
+
+The project is therefore intended as a functional prototype/demo rather than a production-grade emergency navigation service.
+
+---
+
+## 🔮 Future Scope
+
+### 1. Government Flood Sensor Integration
+
+Integrate live government and municipal flood sensors for real-time water-level information.
+
+### 2. Live Traffic Integration
+
+Add real-time traffic congestion data to improve route selection.
+
+### 3. Push Notifications
+
+Send alerts about:
+
+- Heavy rainfall
+- Waterlogging
+- Flood-risk changes
+- Route changes
+
+### 4. Offline Emergency Navigation
+
+Provide essential navigation and emergency information when internet connectivity is unavailable.
+
+### 5. Mobile Applications
+
+Develop dedicated Android and iOS applications.
+
+### 6. Municipal Integration
+
+Integrate with municipal flood-control and disaster-management systems.
+
+### 7. Historical Monsoon Analytics
+
+Use historical rainfall and flood data to identify recurring high-risk zones.
+
+### 8. Expansion to More Indian Cities
+
+Extend flood-aware routing beyond Delhi NCR to other Indian cities affected by monsoon flooding.
