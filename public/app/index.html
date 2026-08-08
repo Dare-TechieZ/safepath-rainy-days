@@ -8,34 +8,100 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="stylesheet" href="./style.css" />
 </head>
-<body>
+<body data-theme="dark">
+
+<!-- ================= AUTH SCREEN ================= -->
+<div class="auth-screen" id="authScreen">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <svg class="logo-svg" viewBox="0 0 48 48" aria-hidden="true">
+        <defs>
+          <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#38bdf8"/><stop offset="100%" stop-color="#2563eb"/>
+          </linearGradient>
+        </defs>
+        <path d="M24 4c7 8.5 12 14.8 12 20.6C36 32.6 30.6 38 24 38S12 32.6 12 24.6C12 18.8 17 12.5 24 4z" fill="url(#lg1)"/>
+        <path d="M24 16.5l7.5 4.3v8.6L24 33.7l-7.5-4.3v-8.6z" fill="#04121f" opacity=".35"/>
+        <path d="M17 30c4-6 10-6 14 0" stroke="#eaf0fa" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+        <circle cx="24" cy="24" r="2.6" fill="#eaf0fa"/>
+        <path d="M8 42h32" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+      </svg>
+      <div>
+        <div class="brand-name">RainSafeRoute</div>
+        <div class="brand-sub" data-i18n="brandSub">Flood-aware navigation</div>
+      </div>
+    </div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-role="user" data-i18n="userLogin">User Login</button>
+      <button class="auth-tab" data-role="admin" data-i18n="adminLogin">Admin Login</button>
+    </div>
+
+    <label class="field"><span data-i18n="username">Username</span>
+      <input id="authUser" type="text" placeholder="Enter your name" autocomplete="username" />
+    </label>
+    <label class="field"><span data-i18n="password">Password</span>
+      <input id="authPass" type="password" placeholder="Enter password" autocomplete="current-password" />
+    </label>
+
+    <div class="field">
+      <span data-i18n="captcha">Security check</span>
+      <div class="captcha-row">
+        <div class="captcha-box" id="captchaBox">------</div>
+        <button class="btn btn-ghost" id="captchaRefresh" title="New code">⟳</button>
+        <input id="captchaInput" type="text" placeholder="Type the code" autocomplete="off" />
+      </div>
+    </div>
+
+    <button class="btn btn-primary btn-block" id="authSubmit" data-i18n="signIn">SIGN IN</button>
+    <div class="inline-error" id="authError"></div>
+    <p class="fineprint" id="authHint"></p>
+  </div>
+</div>
 
 <!-- ================= TOP NAV ================= -->
 <header class="topbar">
   <div class="brand">
-    <span class="logo">🌧️</span>
+    <svg class="logo-svg" viewBox="0 0 48 48" aria-hidden="true">
+      <defs>
+        <linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#38bdf8"/><stop offset="100%" stop-color="#2563eb"/>
+        </linearGradient>
+      </defs>
+      <path d="M24 4c7 8.5 12 14.8 12 20.6C36 32.6 30.6 38 24 38S12 32.6 12 24.6C12 18.8 17 12.5 24 4z" fill="url(#lg2)"/>
+      <path d="M17 30c4-6 10-6 14 0" stroke="#eaf0fa" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      <circle cx="24" cy="24" r="2.6" fill="#eaf0fa"/>
+      <path d="M8 42h32" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+    </svg>
     <div>
       <div class="brand-name">RainSafeRoute</div>
-      <div class="brand-sub">Flood-aware navigation</div>
+      <div class="brand-sub" data-i18n="brandSub">Flood-aware navigation</div>
     </div>
   </div>
 
   <button class="hamburger" id="hamburger" aria-label="Toggle navigation">☰</button>
 
   <nav class="tabs" id="tabs">
-    <button class="tab active" data-tab="navigation">Navigation</button>
-    <button class="tab" data-tab="rainfall">Live Rainfall</button>
-    <button class="tab" data-tab="community">Community Reports</button>
-    <button class="tab" data-tab="safety">Safety</button>
-    <button class="tab" data-tab="analytics">Analytics</button>
-    <button class="tab" data-tab="admin">Admin</button>
+    <button class="tab active" data-tab="navigation" data-i18n="navTab">Navigation</button>
+    <button class="tab" data-tab="rainfall" data-i18n="rainTab">Live Rainfall</button>
+    <button class="tab" data-tab="community" data-i18n="commTab">Community Reports</button>
+    <button class="tab" data-tab="forum" data-i18n="forumTab">Forum</button>
+    <button class="tab" data-tab="safety" data-i18n="safetyTab">Safety</button>
+    <button class="tab" data-tab="analytics" data-i18n="analyticsTab">Analytics</button>
+    <button class="tab tab-admin" data-tab="admin" data-i18n="adminTab" hidden>Admin</button>
   </nav>
 
   <div class="status-cluster">
-    <span class="badge badge-demo" id="modeBadge">🟢 DEMO MODE</span>
     <span class="badge badge-rain" id="rainBadge">🌧️ 0.0 mm/hr</span>
-    <span class="badge badge-sim" id="simBadge">⏸ Simulation paused</span>
     <span class="badge badge-user" id="locBadge">📍 Delhi NCR</span>
+    <select id="langSelect" class="mini-select" aria-label="Language">
+      <option value="en">EN</option>
+      <option value="hi">हिं</option>
+    </select>
+    <button class="badge badge-btn" id="themeToggle" title="Toggle theme">🌙</button>
+    <button class="badge badge-btn" id="faqBtn" data-i18n="faq">FAQ</button>
+    <span class="badge badge-who" id="whoBadge">—</span>
+    <button class="badge badge-btn" id="logoutBtn" data-i18n="logout">Logout</button>
   </div>
 </header>
 
@@ -47,23 +113,23 @@
     <!-- LEFT PANEL -->
     <aside class="panel-col">
       <div class="card">
-        <h2 class="card-title">Find Your Safest Route</h2>
-        <p class="card-sub">Optimised for flood safety, not just speed.</p>
+        <h2 class="card-title" data-i18n="findTitle">Find Your Safest Route</h2>
+        <p class="card-sub" data-i18n="findSub">Optimised for flood safety, not just speed.</p>
 
         <label class="field">
-          <span>Source</span>
+          <span data-i18n="source">Source</span>
           <input id="srcInput" type="text" placeholder="Enter starting location" autocomplete="off" />
           <div class="suggestions" id="srcSuggest"></div>
         </label>
 
         <label class="field">
-          <span>Destination</span>
+          <span data-i18n="destination">Destination</span>
           <input id="dstInput" type="text" placeholder="Enter destination" autocomplete="off" />
           <div class="suggestions" id="dstSuggest"></div>
         </label>
 
         <label class="field">
-          <span>Vehicle</span>
+          <span data-i18n="vehicle">Vehicle</span>
           <select id="vehicleSelect">
             <option value="car">🚗 Car</option>
             <option value="bike">🏍️ Bike</option>
@@ -75,43 +141,37 @@
           </select>
         </label>
 
-        <button class="btn btn-primary btn-block" id="findBtn">FIND SAFE ROUTES</button>
+        <button class="btn btn-primary btn-block" id="findBtn" data-i18n="findBtn">FIND SAFE ROUTES</button>
         <div class="vehicle-note" id="vehicleNote"></div>
         <div class="inline-error" id="formError"></div>
       </div>
 
       <div class="card" id="advisoryCard" hidden>
-        <h3 class="card-title">⚠️ Travel Advisory</h3>
+        <h3 class="card-title" data-i18n="advisory">⚠️ Travel Advisory</h3>
         <div id="advisoryBody" class="advisory"></div>
       </div>
 
       <div class="card">
-        <h3 class="card-title">🌧️ Rainfall <span class="tag tag-warn" id="rainSourceTag">SIMULATED</span></h3>
+        <h3 class="card-title">🌧️ <span data-i18n="rainfall">Rainfall</span> <span class="tag tag-info" id="rainSourceTag">LIVE</span></h3>
         <div class="rain-readout">
           <div><b id="rainValue">0.0</b><small>mm/hr</small></div>
           <div class="rain-meta">
-            <div>Intensity: <b id="rainIntensity">No Rain</b></div>
-            <div>Temp: <b id="rainTemp">—</b></div>
-            <div>Updated: <b id="rainUpdated">—</b></div>
+            <div><span data-i18n="intensity">Intensity</span>: <b id="rainIntensity">No Rain</b></div>
+            <div><span data-i18n="temp">Temp</span>: <b id="rainTemp">—</b></div>
+            <div><span data-i18n="updated">Updated</span>: <b id="rainUpdated">—</b></div>
           </div>
         </div>
         <div class="rain-bar"><div id="rainBarFill"></div></div>
         <div class="btn-row">
-          <button class="btn btn-ghost" data-rain="light">Light</button>
-          <button class="btn btn-ghost" data-rain="moderate">Moderate</button>
-          <button class="btn btn-ghost" data-rain="heavy">Heavy</button>
-          <button class="btn btn-ghost" data-rain="extreme">Extreme</button>
-        </div>
-        <div class="btn-row">
-          <button class="btn btn-safe" id="simToggle">▶ Simulate Rainfall</button>
-          <button class="btn btn-info" id="fetchLive">Fetch Live Weather</button>
+          <button class="btn btn-info" id="fetchLive" data-i18n="fetchLive">Refresh Live Weather</button>
+          <button class="btn btn-ghost" id="heatToggle" data-i18n="heatOn">Rainfall Heatmap: ON</button>
         </div>
       </div>
 
       <div class="card">
-        <h3 class="card-title">🚨 Emergency Helplines <span class="tag tag-info">INDIA</span></h3>
+        <h3 class="card-title">🚨 <span data-i18n="helplines">Emergency Helplines</span> <span class="tag tag-info">INDIA</span></h3>
         <div class="helplines" id="helplines"></div>
-        <p class="fineprint">Availability can vary by region and service. Always use the official emergency service appropriate to your situation.</p>
+        <p class="fineprint" data-i18n="helplineNote">Availability can vary by region and service. Always use the official emergency service appropriate to your situation.</p>
       </div>
     </aside>
 
@@ -121,29 +181,30 @@
         <div id="map"></div>
         <div class="rain-fx" id="rainFx"></div>
         <div class="legend">
-          <div class="legend-title">Legend</div>
-          <div>🟢 Safest Route</div>
-          <div>🔴 Fastest / High Risk</div>
-          <div>⚫ Alternative Route</div>
-          <div>⚠️ Historical Flood Hotspot</div>
-          <div>📢 Community Report</div>
-          <div>🏥 Hospital / Medical Aid</div>
+          <div class="legend-title" data-i18n="legend">Legend</div>
+          <div>🟢 <span data-i18n="lgSafest">Safest Route</span></div>
+          <div>🔴 <span data-i18n="lgFastest">Fastest / High Risk</span></div>
+          <div>⚫ <span data-i18n="lgAlt">Alternative Route</span></div>
+          <div>⚠️ <span data-i18n="lgHotspot">Flood Hotspot</span></div>
+          <div>📢 <span data-i18n="lgReport">Community Report</span></div>
+          <div>🏥 <span data-i18n="lgHospital">Hospital / Medical Aid</span></div>
+          <div>🟥 <span data-i18n="lgHeat">Rainfall Heat Intensity</span></div>
         </div>
       </div>
 
       <div class="routes" id="routeCards">
-        <div class="empty-state">Enter a source and destination, then press <b>FIND SAFE ROUTES</b> to compare flood risk across three real road routes.</div>
+        <div class="empty-state" data-i18n="routesEmpty">Enter a source and destination, then press <b>FIND SAFE ROUTES</b> to compare flood risk across three real road routes.</div>
       </div>
 
       <div class="card" id="compareCard" hidden>
-        <h3 class="card-title">Route Comparison</h3>
+        <h3 class="card-title" data-i18n="compare">Route Comparison</h3>
         <div class="table-scroll">
           <table class="table" id="compareTable"></table>
         </div>
       </div>
 
       <div class="card" id="hospitalCard" hidden>
-        <h3 class="card-title">🏥 Nearby Medical Aid <span class="tag tag-warn" id="hospitalTag">DEMO DATA</span></h3>
+        <h3 class="card-title">🏥 <span data-i18n="medical">Nearby Medical Aid</span> <span class="tag tag-info" id="hospitalTag">OSM</span></h3>
         <div id="hospitalList" class="hospital-list"></div>
       </div>
     </div>
@@ -153,29 +214,21 @@
 <!-- ================= RAINFALL VIEW ================= -->
 <section class="view" id="view-rainfall">
   <div class="card">
-    <h2 class="card-title">Live Rainfall Simulator <span class="tag tag-warn">DEMO SIMULATION</span></h2>
+    <h2 class="card-title" data-i18n="rainNow">Live Rainfall</h2>
     <div class="stat-grid">
-      <div class="stat"><span>Rainfall</span><b id="rf2Value">0.0 mm/hr</b></div>
-      <div class="stat"><span>Intensity</span><b id="rf2Intensity">No Rain</b></div>
-      <div class="stat"><span>Condition</span><b id="rf2Condition">Clear</b></div>
-      <div class="stat"><span>Temperature</span><b id="rf2Temp">—</b></div>
-      <div class="stat"><span>Data source</span><b id="rf2Source">Simulated</b></div>
-      <div class="stat"><span>Last updated</span><b id="rf2Updated">—</b></div>
+      <div class="stat"><span data-i18n="rainfall">Rainfall</span><b id="rf2Value">0.0 mm/hr</b></div>
+      <div class="stat"><span data-i18n="intensity">Intensity</span><b id="rf2Intensity">No Rain</b></div>
+      <div class="stat"><span data-i18n="condition">Condition</span><b id="rf2Condition">Clear</b></div>
+      <div class="stat"><span data-i18n="temp">Temperature</span><b id="rf2Temp">—</b></div>
+      <div class="stat"><span data-i18n="dataSource">Data source</span><b id="rf2Source">Open-Meteo</b></div>
+      <div class="stat"><span data-i18n="updated">Last updated</span><b id="rf2Updated">—</b></div>
     </div>
-    <div class="btn-row">
-      <button class="btn btn-ghost" data-rain="light">Light Rain</button>
-      <button class="btn btn-ghost" data-rain="moderate">Moderate Rain</button>
-      <button class="btn btn-ghost" data-rain="heavy">Heavy Rain</button>
-      <button class="btn btn-ghost" data-rain="extreme">Extreme Rain</button>
-      <button class="btn btn-safe" id="simToggle2">▶ Auto Simulation</button>
-      <button class="btn btn-danger" id="simPause2">⏸ Pause Simulation</button>
-    </div>
-    <p class="fineprint">Auto simulation steps rainfall gradually (0 → 3 → 7 → 12 → 18 → 25 → 32 mm/hr) every few seconds and recalculates every route risk score. Real deployments poll Open-Meteo roughly every 15 minutes.</p>
   </div>
 
   <div class="card">
-    <h3 class="card-title">Rainfall Trend (last 12 readings)</h3>
-    <canvas id="rainTrendChart" height="220"></canvas>
+    <h3 class="card-title"><span data-i18n="trendTitle">Rainfall Trend</span> — <span id="trendPlace" data-i18n="chooseDest">Choose a destination</span></h3>
+    <div id="trendEmpty" class="empty-state" data-i18n="chooseDestLong">Select a destination in the Navigation tab to see the rainfall trend for that location.</div>
+    <canvas id="rainTrendChart" height="220" hidden></canvas>
   </div>
 </section>
 
@@ -183,11 +236,11 @@
 <section class="view" id="view-community">
   <div class="layout-2">
     <div class="card">
-      <h2 class="card-title">📢 Report Waterlogging</h2>
-      <label class="field"><span>Location</span>
+      <h2 class="card-title" data-i18n="reportTitle">📢 Report Waterlogging</h2>
+      <label class="field"><span data-i18n="location">Location</span>
         <input id="repLocation" type="text" placeholder="e.g. Minto Bridge underpass" />
       </label>
-      <label class="field"><span>Severity</span>
+      <label class="field"><span data-i18n="severity">Severity</span>
         <select id="repSeverity">
           <option value="Ankle-level">Ankle-level</option>
           <option value="Knee-level">Knee-level</option>
@@ -195,29 +248,66 @@
           <option value="Road completely blocked">Road completely blocked</option>
         </select>
       </label>
-      <label class="field"><span>Description</span>
+      <label class="field"><span data-i18n="description">Description</span>
         <textarea id="repDesc" rows="3" placeholder="What are you seeing on the road?"></textarea>
       </label>
-      <label class="field"><span>Photo (optional)</span>
+      <label class="field"><span data-i18n="photo">Photo (optional)</span>
         <input id="repPhoto" type="file" accept="image/*" />
       </label>
+      <label class="field"><span data-i18n="video">Video (optional)</span>
+        <input id="repVideo" type="file" accept="video/*" />
+      </label>
       <div class="btn-row">
-        <button class="btn btn-primary" id="repSubmit">SUBMIT REPORT</button>
-        <button class="btn btn-ghost" id="repCancel">CANCEL</button>
+        <button class="btn btn-primary" id="repSubmit" data-i18n="submitReport">SUBMIT REPORT</button>
+        <button class="btn btn-ghost" id="repCancel" data-i18n="cancel">CANCEL</button>
       </div>
       <div class="inline-error" id="repError"></div>
-      <p class="fineprint">Reports are stored locally in your browser for this demo and are labelled <b>DEMO COMMUNITY DATA</b>.</p>
     </div>
 
     <div class="card">
-      <h2 class="card-title">Live Waterlogging Reports <span class="tag tag-warn">DEMO COMMUNITY DATA</span></h2>
+      <h2 class="card-title" data-i18n="liveReports">Live Waterlogging Reports</h2>
       <div class="btn-row filters" id="reportFilters">
-        <button class="btn btn-chip active" data-filter="all">All</button>
-        <button class="btn btn-chip" data-filter="recent">Recent</button>
-        <button class="btn btn-chip" data-filter="severe">Severe</button>
-        <button class="btn btn-chip" data-filter="verified">Verified</button>
+        <button class="btn btn-chip active" data-filter="all" data-i18n="all">All</button>
+        <button class="btn btn-chip" data-filter="recent" data-i18n="recent">Recent</button>
+        <button class="btn btn-chip" data-filter="severe" data-i18n="severe">Severe</button>
+        <button class="btn btn-chip" data-filter="verified" data-i18n="verified">Verified</button>
+        <button class="btn btn-chip" data-filter="mine" data-i18n="mine">My reports</button>
       </div>
       <div id="reportList" class="report-list"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FORUM VIEW ================= -->
+<section class="view" id="view-forum">
+  <div class="layout-2">
+    <div class="card">
+      <h2 class="card-title" data-i18n="forumNew">🗣️ Start a Discussion</h2>
+      <label class="field"><span data-i18n="area">Area / Locality</span>
+        <input id="fmArea" type="text" placeholder="e.g. Lajpat Nagar" />
+      </label>
+      <label class="field"><span data-i18n="title">Title</span>
+        <input id="fmTitle" type="text" placeholder="How bad is the water near the metro gate?" />
+      </label>
+      <label class="field"><span data-i18n="message">Message</span>
+        <textarea id="fmBody" rows="4" placeholder="Share what you are seeing right now..."></textarea>
+      </label>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="fmPost" data-i18n="post">POST</button>
+      </div>
+      <div class="inline-error" id="fmError"></div>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title" data-i18n="forumFeed">Community Forum</h2>
+      <div class="btn-row filters">
+        <input id="fmSearch" type="text" placeholder="Filter by area or keyword" />
+      </div>
+      <div class="btn-row filters" id="forumSort">
+        <button class="btn btn-chip active" data-sort="hot" data-i18n="top">Top</button>
+        <button class="btn btn-chip" data-sort="new" data-i18n="newest">Newest</button>
+      </div>
+      <div id="forumList" class="report-list"></div>
     </div>
   </div>
 </section>
@@ -225,41 +315,27 @@
 <!-- ================= SAFETY VIEW ================= -->
 <section class="view" id="view-safety">
   <div class="card">
-    <h2 class="card-title">🛡️ Travel Safety Card</h2>
+    <h2 class="card-title" data-i18n="safetyCard">🛡️ Travel Safety Card</h2>
     <div class="layout-2">
       <div>
-        <h4>Before travelling</h4>
-        <ul class="safety-list">
-          <li>Check rainfall intensity before you leave.</li>
-          <li>Avoid flooded underpasses entirely.</li>
-          <li>Do not enter roads where the water depth is unknown.</li>
-          <li>Keep your phone charged and carry a power bank.</li>
-          <li>Carry emergency supplies (water, torch, basic first aid).</li>
-          <li>Inform someone about your route and expected arrival.</li>
-        </ul>
+        <h4 data-i18n="beforeTravel">Before travelling</h4>
+        <ul class="safety-list" id="safeListA"></ul>
       </div>
       <div>
-        <h4>During heavy rainfall</h4>
-        <ul class="safety-list">
-          <li>Reduce speed and switch on low-beam headlights.</li>
-          <li>Maintain extra braking distance.</li>
-          <li>Avoid driving through moving water.</li>
-          <li>Do not stop under trees, hoardings or unsafe structures.</li>
-          <li>Follow instructions from local authorities and traffic police.</li>
-        </ul>
+        <h4 data-i18n="duringRain">During heavy rainfall</h4>
+        <ul class="safety-list" id="safeListB"></ul>
       </div>
     </div>
-    <div class="danger-banner">⚠️ If water is moving rapidly across the road, DO NOT attempt to cross.</div>
+    <div class="danger-banner" data-i18n="dangerBanner">⚠️ If water is moving rapidly across the road, DO NOT attempt to cross.</div>
   </div>
 
   <div class="card">
-    <h3 class="card-title">🚨 Indian Emergency Helplines</h3>
+    <h3 class="card-title">🚨 <span data-i18n="helplinesIn">Indian Emergency Helplines</span></h3>
     <div class="helplines" id="helplines2"></div>
-    <p class="fineprint">Availability can vary by region/service. Use the appropriate official emergency service for your situation.</p>
   </div>
 
   <div class="card">
-    <h3 class="card-title">Historical Flood Hotspots <span class="tag tag-warn">HISTORICAL / DEMO HOTSPOT</span></h3>
+    <h3 class="card-title" data-i18n="hotspots">Flood Hotspots</h3>
     <div id="hotspotList" class="hotspot-list"></div>
   </div>
 </section>
@@ -267,59 +343,68 @@
 <!-- ================= ANALYTICS VIEW ================= -->
 <section class="view" id="view-analytics">
   <div class="card">
-    <h2 class="card-title">Analytics <span class="tag tag-warn">SIMULATED DEMO DATA</span></h2>
+    <h2 class="card-title" data-i18n="analyticsTab">Analytics</h2>
     <div class="btn-row filters" id="analyticsFilters">
-      <button class="btn btn-chip active" data-range="7">Last 7 days</button>
-      <button class="btn btn-chip" data-range="14">Last 14 days</button>
-      <button class="btn btn-chip" data-range="30">Last 30 days</button>
+      <button class="btn btn-chip active" data-range="7" data-i18n="last7">Last 7 days</button>
+      <button class="btn btn-chip" data-range="14" data-i18n="last14">Last 14 days</button>
+      <button class="btn btn-chip" data-range="30" data-i18n="last30">Last 30 days</button>
     </div>
     <div class="kpi-grid" id="kpiGrid"></div>
   </div>
   <div class="layout-2">
-    <div class="card"><h3 class="card-title">Route Risk Distribution</h3><canvas id="riskChart" height="220"></canvas></div>
-    <div class="card"><h3 class="card-title">Rainfall Trend</h3><canvas id="rainChart" height="220"></canvas></div>
-    <div class="card"><h3 class="card-title">Community Reports Over Time</h3><canvas id="reportChart" height="220"></canvas></div>
-    <div class="card"><h3 class="card-title">Safe vs Risky Routes</h3><canvas id="safeChart" height="220"></canvas></div>
+    <div class="card"><h3 class="card-title" data-i18n="riskDist">Route Risk Distribution</h3><canvas id="riskChart" height="220"></canvas></div>
+    <div class="card"><h3 class="card-title" data-i18n="rainTrend">Rainfall Trend</h3><canvas id="rainChart" height="220"></canvas></div>
+    <div class="card"><h3 class="card-title" data-i18n="reportsOverTime">Community Reports Over Time</h3><canvas id="reportChart" height="220"></canvas></div>
+    <div class="card"><h3 class="card-title" data-i18n="safeVsRisky">Safe vs Risky Routes</h3><canvas id="safeChart" height="220"></canvas></div>
   </div>
-  <div class="card"><h3 class="card-title">Flood Hotspot Distribution by Severity</h3><canvas id="hotspotChart" height="220"></canvas></div>
+  <div class="card"><h3 class="card-title" data-i18n="hotspotDist">Flood Hotspot Distribution by Severity</h3><canvas id="hotspotChart" height="220"></canvas></div>
 </section>
 
 <!-- ================= ADMIN VIEW ================= -->
 <section class="view" id="view-admin">
   <div class="card">
-    <h2 class="card-title">System Monitoring <span class="tag tag-warn">DEMO</span></h2>
+    <h2 class="card-title" data-i18n="sysMon">System Monitoring</h2>
     <div class="kpi-grid" id="adminGrid"></div>
   </div>
   <div class="card">
-    <h3 class="card-title">Community Reports</h3>
+    <h3 class="card-title" data-i18n="commReports">Community Reports</h3>
     <div class="btn-row filters" id="adminFilters">
-      <button class="btn btn-chip active" data-af="all">All</button>
-      <button class="btn btn-chip" data-af="pending">Pending</button>
-      <button class="btn btn-chip" data-af="verified">Verified</button>
-      <button class="btn btn-chip" data-af="rejected">Rejected</button>
+      <button class="btn btn-chip active" data-af="all" data-i18n="all">All</button>
+      <button class="btn btn-chip" data-af="pending" data-i18n="pending">Pending</button>
+      <button class="btn btn-chip" data-af="verified" data-i18n="verified">Verified</button>
+      <button class="btn btn-chip" data-af="rejected" data-i18n="rejected">Rejected</button>
     </div>
     <div class="table-scroll"><table class="table" id="adminTable"></table></div>
-  </div>
-  <div class="card">
-    <h3 class="card-title">Demo Data</h3>
-    <div class="btn-row">
-      <button class="btn btn-ghost" id="adminStart">▶ Start Simulation</button>
-      <button class="btn btn-ghost" id="adminPause">⏸ Pause Simulation</button>
-      <button class="btn btn-danger" id="resetDemo">RESET DEMO DATA</button>
-    </div>
-    <p class="fineprint">Reset clears locally stored reports, analytics counters, vehicle preference and last searched locations.</p>
   </div>
 </section>
 
 </main>
 
-<footer class="footer">
-  RainSafeRoute — frontend prototype. Rainfall may use live Open-Meteo data; hotspots, hospitals, community reports and analytics are simulated demo data.
-</footer>
+<!-- ================= FAQ MODAL ================= -->
+<div class="modal" id="faqModal" hidden>
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3 class="card-title" data-i18n="faqTitle">❓ Frequently Asked Questions</h3>
+      <button class="btn btn-ghost" id="faqClose">✕</button>
+    </div>
+    <div class="btn-row">
+      <label class="btn btn-info file-btn">
+        <span data-i18n="uploadFaq">Upload FAQ PDF</span>
+        <input id="faqUpload" type="file" accept="application/pdf" hidden />
+      </label>
+      <a class="btn btn-ghost" id="faqOpenTab" href="#" target="_blank" rel="noopener" data-i18n="openTab">Open in new tab</a>
+    </div>
+    <div id="faqViewer" class="faq-viewer">
+      <div class="empty-state" data-i18n="faqEmpty">No FAQ PDF loaded yet. Upload your FAQ PDF to read it here, or place a file named <b>faq.pdf</b> next to index.html.</div>
+    </div>
+    <div id="faqFallback" class="faq-text"></div>
+  </div>
+</div>
 
 <div class="toast-wrap" id="toastWrap"></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
 <script src="./script.js"></script>
 </body>
 </html>
