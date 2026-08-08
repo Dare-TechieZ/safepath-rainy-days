@@ -1529,16 +1529,6 @@ const FAQ_FALLBACK = [
 
 function openFaq() {
   $("faqModal").hidden = false;
-  const viewer = $("faqViewer");
-  const stored = localStorage.getItem("rsr_faq_pdf");
-  if (stored) {
-    viewer.innerHTML = `<iframe src="${stored}" title="FAQ PDF"></iframe>`;
-    $("faqOpenTab").href = stored;
-  } else {
-    viewer.innerHTML = `<iframe src="./faq.pdf" title="FAQ PDF"></iframe>`;
-    $("faqOpenTab").href = "./faq.pdf";
-  }
-  $("faqFallback").innerHTML = FAQ_FALLBACK.map(([q, a]) => `<h5>${esc(q)}</h5><p>${esc(a)}</p>`).join("");
 }
 
 function handleFaqUpload(file) {
@@ -1661,7 +1651,7 @@ function init() {
   $("faqBtn").onclick = openFaq;
   $("faqClose").onclick = () => ($("faqModal").hidden = true);
   $("faqModal").addEventListener("click", (e) => { if (e.target.id === "faqModal") $("faqModal").hidden = true; });
-  $("faqUpload").addEventListener("change", (e) => handleFaqUpload(e.target.files[0]));
+
 
   window.addEventListener("resize", () => drawCharts());
   setInterval(() => {
